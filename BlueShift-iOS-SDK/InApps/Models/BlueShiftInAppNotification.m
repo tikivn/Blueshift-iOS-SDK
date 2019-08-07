@@ -49,7 +49,7 @@
                     if ([contentDictionary objectForKey: kInAppNotificationModalIconKey]) {
                         self.icon =(NSString *)[contentDictionary objectForKey: kInAppNotificationModalIconKey];
                     }
-
+                    
                     break;
                     
                 default:
@@ -135,6 +135,7 @@
                     if ([contenStyletDictionary objectForKey: kInAppNotificationModalTitleGravityKey]) {
                         self.titleGravity = (NSString *)[contenStyletDictionary objectForKey: kInAppNotificationModalTitleGravityKey];
                     }
+
                     if ([contenStyletDictionary objectForKey: kInAppNotificationModalTitleSizeKey]) {
                         self.titleSize = (NSNumber *)[contenStyletDictionary objectForKey: kInAppNotificationModalTitleSizeKey];
                     }
@@ -237,6 +238,8 @@
     if (self = [super init]) {
         @try {
             self.inAppType = [BlueShiftInAppNotificationHelper inAppTypeFromString: appEntity.type];
+            
+            self.objectID = appEntity.objectID;
             
             NSDictionary *inAppDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:appEntity.payload];
             if ([inAppDictionary objectForKey: kInAppNotificationKey]) {
