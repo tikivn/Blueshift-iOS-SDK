@@ -4,7 +4,7 @@
 //
 //  Created by shahas kp on 10/07/19.
 //
-
+#import <StoreKit/StoreKit.h>
 #import "BlueShiftInAppNotificationManager.h"
 #import "ViewControllers/Templates/BlueShiftNotificationWebViewController.h"
 #import "ViewControllers/Templates/BlueShiftNotificationModalViewController.h"
@@ -316,9 +316,21 @@
 - (void)createNotificationFromDictionary:(InAppNotificationEntity *) inAppEntity {
     
     BlueShiftInAppNotification *inAppNotification = [[BlueShiftInAppNotification alloc] initFromEntity:inAppEntity];
-    [self createNotification: inAppNotification];
+    
+    if (inAppNotification.inAppType == BlueShiftNotificationRating) {
+        
+        [self DisplayReviewController];
+    } else {
+        [self createNotification: inAppNotification];
+    }
 }
 
+
+- (void)DisplayReviewController {
+    if (@available(iOS 10.3, *)) {
+        [SKStoreReviewController requestReview];
+    }
+}
 
 
 // Notification Click Callbacks

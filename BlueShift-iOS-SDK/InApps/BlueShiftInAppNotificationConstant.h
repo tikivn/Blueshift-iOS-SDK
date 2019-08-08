@@ -76,6 +76,7 @@
 #define kInAppNotificationTypeCenterPopUpKey                    @"center_popup"
 #define kInAppNotificationTypeCenterPopUpImageKey               @"center_popup_with_image"
 #define kInAppNotificationTypeSlideBannerKey                    @"slide_in_banner"
+#define kInAppNotificationTypeRatingKey                         @"rating"
 #define kInAppNotificationTypeCenterPopUpOneButtonKey           @"center_popup_one_button"
 
 /*  Define a DataMart */
