@@ -58,13 +58,8 @@ static BlueShift *_sharedBlueShiftInstance = nil;
     _sharedBlueShiftInstance.config = config;
     _sharedBlueShiftInstance.deviceData = [[BlueShiftDeviceData alloc] init];
     _sharedBlueShiftInstance.appData = [[BlueShiftAppData alloc] init];
-    if (@available(iOS 8.0, *)) {
-        _sharedBlueShiftInstance.pushNotification = [[BlueShiftPushNotificationSettings alloc] init];
-    }
-    
-    if (@available(iOS 10.0, *)) {
-        _sharedBlueShiftInstance.userNotification = [[BlueShiftUserNotificationSettings alloc] init];
-    }
+    _sharedBlueShiftInstance.userNotification = [[BlueShiftUserNotificationSettings alloc] init];
+
     
     // Initialize deeplinks ...
     [self initDeepLinks];

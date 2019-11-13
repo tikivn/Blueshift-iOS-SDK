@@ -27,43 +27,17 @@
 }
 
 - (void) registerForNotification {
-    
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        if(SYSTEM_VERSION_GRATERTHAN_OR_EQUALTO(@"10.0")){
-            if (@available(iOS 10.0, *)) {
-                UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-                center.delegate = self.userNotificationDelegate;
-                [center setNotificationCategories: [[[BlueShift sharedInstance] userNotification] notificationCategories]];
-                [center requestAuthorizationWithOptions:([[[BlueShift sharedInstance] userNotification] notificationTypes]) completionHandler:^(BOOL granted, NSError * _Nullable error){
-                    if(!error){
-                        dispatch_async(dispatch_get_main_queue(), ^(void) {
-                            [[UIApplication sharedApplication] registerForRemoteNotifications];
-                        });
-                    }
-                }];
-            }
-        } else {
-           if (@available(iOS 10.0, *)) {
-                UIUserNotificationSettings* notificationSettings = [[[BlueShift sharedInstance] pushNotification] notificationSettings];
-                [[UIApplication sharedApplication] registerUserNotificationSettings: notificationSettings];
-                [[UIApplication sharedApplication] registerForRemoteNotifications];
-            }
-//            NSSet *categories = [[[BlueShift sharedInstance] pushNotification] notificationCategories];
-//            NSSet *customCategories = [[[BlueShift sharedInstance] config] customCategories];
-//            NSMutableSet *categoriesWithCustomCategory = [[NSMutableSet alloc] init];
-//            // Adding custom category to categories
-//            [categoriesWithCustomCategory setByAddingObjectsFromSet:customCategories];
-//            [categoriesWithCustomCategory unionSet:categories];
-//            if (@available(iOS 8.0, *)) {
-//                UIUserNotificationType types = [[[BlueShift sharedInstance] pushNotification] notificationTypes];
-//                UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:types categories:categoriesWithCustomCategory];
-//                [[UIApplication sharedApplication] registerUserNotificationSettings: notificationSettings];
-//                [[UIApplication sharedApplication] registerForRemoteNotifications];
-//            } else {
-//                // Fallback on earlier versions
-//            }
-
-        }
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        center.delegate = self.userNotificationDelegate;
+        [center setNotificationCategories: [[[BlueShift sharedInstance] userNotification] notificationCategories]];
+        [center requestAuthorizationWithOptions:([[[BlueShift sharedInstance] userNotification] notificationTypes]) completionHandler:^(BOOL granted, NSError * _Nullable error){
+            if(!error){
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    [[UIApplication sharedApplication] registerForRemoteNotifications];
+                    });
+                }
+            }];
         
         [self downloadFileFromURL];
     }
@@ -83,21 +57,16 @@
 }
 
 - (void) registerForRemoteNotification:(NSData *)deviceToken {
-    if (@available(iOS 8.0, *)) {
-        if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types]) {
-            NSDictionary *userInfo =
-            [NSDictionary dictionaryWithObject:@YES forKey:[[[BlueShift sharedInstance] config] isEnabledPushNotificationKey]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:
+    if ([[UIApplication sharedApplication] isRegisteredForRemoteNotifications]) {
+        NSDictionary *userInfo =
+        [NSDictionary dictionaryWithObject:@YES forKey:[[[BlueShift sharedInstance]config] isEnabledPushNotificationKey]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:
              [[[BlueShift sharedInstance] config] blueShiftNotificationName] object:nil userInfo:userInfo];
-        }
-        else {
-            NSDictionary *userInfo =
-            [NSDictionary dictionaryWithObject:@NO forKey:[[[BlueShift sharedInstance] config] isEnabledPushNotificationKey]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:
-             [[[BlueShift sharedInstance] config] blueShiftNotificationName] object:nil userInfo:userInfo];
-        }
     } else {
-        // Fallback on earlier versions
+        NSDictionary *userInfo =
+        [NSDictionary dictionaryWithObject:@NO forKey:[[[BlueShift sharedInstance] config] isEnabledPushNotificationKey]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:
+             [[[BlueShift sharedInstance] config] blueShiftNotificationName] object:nil userInfo:userInfo];
     }
 
     NSString *deviceTokenString = [self hexadecimalStringFromData: deviceToken];
@@ -169,13 +138,7 @@
     [self handleRemoteNotification:userInfo forApplicationState:application.applicationState];
 }
 
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
-    self.userInfo = userInfo;
-    [self application:application handleRemoteNotification:userInfo];
-}
-
-- (void)application:(UIApplication *)application handleLocalNotification:(nonnull UNNotificationRequest *)notification  API_AVAILABLE(ios(10.0)){
+- (void)application:(UIApplication *)application handleLocalNotification:(nonnull UNNotificationRequest *)notification {
     self.userInfo = notification.content.userInfo;
     [self handleLocalNotification:self.userInfo forApplicationState:application.applicationState];
 }

@@ -25,7 +25,6 @@
 #import "BlueShiftBatchUploadConfig.h"
 #import "BlueShiftAppData.h"
 #import "SDKVersion.h"
-#import "BlueShiftPushNotificationSettings.h"
 #import "BlueShiftUserNotificationSettings.h"
 #import "BlueShiftUserNotificationCenterDelegate.h"
 #import "BlueshiftEventAnalyticsHelper.h"
@@ -43,8 +42,7 @@
 @property BlueShiftDeviceData *deviceData;
 @property BlueShiftAppData *appData;
 @property (nonatomic, strong) BlueShiftUserInfo *userInfo;
-@property (nonatomic, strong) BlueShiftPushNotificationSettings *pushNotification API_AVAILABLE(ios(8.0));
-@property (nonatomic, strong) BlueShiftUserNotificationSettings *userNotification API_AVAILABLE(ios(10.0));
+@property (nonatomic, strong) BlueShiftUserNotificationSettings *userNotification;
 @property (nonatomic, strong, readwrite) NSTimer *inAppMsgAPITimer;
 @property (nonatomic, strong, readwrite) NSTimer *inAppDBTimer;
 @property NSString *deviceToken;
