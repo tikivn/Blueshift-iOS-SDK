@@ -1,0 +1,131 @@
+# Uncomment this line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
+ENV['COCOAPODS_DISABLE_DETERMINISTIC_UUIDS'] = 'true'
+platform :ios, '9.0'
+use_frameworks!(:linkage => :static)
+# Require autolink script
+require_relative "./Scripts/react_native_modules"
+require_relative "./Scripts/autolink_native_modules" # (Overrive default functions)
+require_relative "./Scripts/app_tracking"
+require_relative "./Scripts/flutter"
+workspace 'TikiProject.xcworkspace'
+project 'TikiProject.xcodeproj'
+install! 'cocoapods', :disable_input_output_paths => true
+def app_pods
+    # Tracking Libraries
+    pod 'FBSDKCoreKit',             '8.2.0'
+    pod 'FBSDKLoginKit',            '8.2.0'
+    pod 'FBSDKShareKit',            '8.2.0'
+    pod 'GoogleSignIn',             '4.4.0'
+    pod 'GoogleAnalytics'
+    pod 'Firebase',                 '6.34.0'
+    pod 'Firebase/Analytics'
+    pod 'Firebase/RemoteConfig'
+    pod 'Firebase/Messaging'
+    pod 'Firebase/Crashlytics'
+    pod 'OneSignal',                '2.16.0'
+    pod 'AppsFlyerFramework', '5.4.4'
+    pod 'Amplitude-iOS', '4.10.0'
+    # Network
+    pod 'SDWebImage',               '~> 5.8'
+    pod 'AlamofireObjectMapper'
+    pod 'Alamofire'
+    # Reactive
+    pod 'RxSwift',                  '~> 4.5'
+    pod 'RxCocoa'
+    pod 'RxAlamofire'
+    pod 'RxDataSources'
+    pod 'RxGesture'
+    pod 'RxSwiftExt'
+    pod 'RxKeyboard'
+    pod 'libextobjc',               '0.6'
+    pod 'ReactiveCocoa',            '~> 2.5', :inhibit_warnings => true
+    # Data
+    pod 'JSONModel',                '~> 1.8.0'
+    pod 'RealmSwift',               '5.5.0'
+    # UI
+    pod 'DKImagePickerController',  '4.1.3', :inhibit_warnings => true
+    pod 'TOCropViewController',  '2.5.3', :inhibit_warnings => true
+    pod 'DKPhotoGallery',           '0.0.14'
+    pod 'SVProgressHUD',            '~> 2.0'
+    pod 'SnapKit', :inhibit_warnings => true
+    pod 'Reusable'
+    pod 'TTTAttributedLabel'
+    pod 'TKControlsLib',            '1.0.4'
+    pod 'ZaloSDK',                  '2.5.0220.1'
+    pod 'Aspects', '1.4.1'
+    #Flutter
+    TKFLutter()
+    # React-Native
+    react_native_modules!('.')
+    autolink_native_modules!
+    pod 'TikiReactNative', :git => 'git@github.com:tikivn/Tiki-React-Native.git', :tag => 'v4.13.4'
+    # Tiki Feature
+    pod 'TKRemoteConfig', :git => 'git@github.com:tikivn/TKRemoteConfig.git', :tag => '4.53.0'
+    pod 'TKNavigator', :git => 'git@github.com:tikivn/TKNavigator.git', :tag => '4.57.0', :subspecs => ['TikiExt', 'ActionDispatcher']
+    pod 'TKAddress',  :git => 'git@github.com:tikivn/TKAddress.git', :tag => '4.60.0'
+    pod 'TKHome',  :git => 'git@github.com:tikivn/TKHome.git', :tag => '4.60.0'
+    pod 'TKAppNotification',  :git => 'git@github.com:tikivn/TKAppNotification.git', :tag => '4.60.0'
+    pod 'TKCommonAppKit',  :git => 'git@github.com:tikivn/TKCommonAppKit.git', :tag => '4.60.0'
+    pod 'TKAppClient',  :git => 'git@github.com:tikivn/TKAppClient.git', :tag => '4.60.0'
+    pod 'TKProductDetails',  :git => 'git@github.com:tikivn/TKProductDetails.git', :tag => '4.60.0'
+    pod 'TKListing',  :git => 'git@github.com:tikivn/TKListing.git', :tag => '4.60.0'
+    pod 'TKCouponService',  :git => 'git@github.com:tikivn/TKCouponService.git', :tag => '4.60.0'
+    pod 'TKNetworkManager', :git => 'git@github.com:tikivn/TKiOSNetworkManager.git', :tag => '4.59.0'
+    pod 'TKCheckout',  :git => 'git@github.com:tikivn/TKCheckout.git', :tag => '4.60.0'
+    pod 'TKUIKit',  :git => 'git@github.com:tikivn/TKUIKit.git', :tag => '4.60.0'
+    pod 'TKSocketManager', :git => 'git@github.com:tikivn/TKiOSSocket.git', :tag => '4.49.0'
+    # TikiLIVE
+    pod 'TKLive',  :git => 'git@github.com:tikivn/TKLive-iOS.git', :tag => '4.60.0'
+    # Tracking, please refer defines in ./Scripts/app_tracking.rb
+    TKAppTrackingCommit('d0e65e5')
+    pod 'TKTrackingSDK',  :git => 'git@github.com:tikivn/TikiTrackingSDK.git', :tag => '4.60.0'
+    # Debug Menu toolkit
+    pod 'TKDebugMenuKit', :git => 'git@github.com:tikivn/TKDebugMenu.git', :tag => '1.1.0', :configurations => ['Debug', 'Staging']
+    pod 'FLEX', '4.2.2', :configurations => ['Debug', 'Staging']
+    pod 'YYText', '~> 1.0', :configurations => ['Debug', 'Staging']
+end
+def testing_pods
+    inherit! :search_paths
+    pod 'OHHTTPStubs',  '~> 7.0'
+    pod 'OCMock',       '~> 3.3'
+end
+target 'TikiProject' do
+    project 'TikiProject.xcodeproj'
+    app_pods
+end
+target 'TikiDev' do
+    project 'TikiProject.xcodeproj'
+    app_pods
+end
+target 'TikiDevUITests' do
+    testing_pods
+end
+target 'TikiDevTests' do
+    testing_pods
+end
+target 'TikiNotificationServiceDev' do
+    project 'TikiProject.xcodeproj'
+  pod 'OneSignal',                '2.16.0'
+end
+target 'TikiNotificationServices' do
+    project 'TikiProject.xcodeproj'
+  pod 'OneSignal',                '2.16.0'
+end
+post_install do |installer_representation|
+    installer_representation.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            if config.name == 'Debug'
+                config.build_settings['OTHER_SWIFT_FLAGS'] = ['$(inherited)', '-Onone']
+                config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Owholemodule'
+            end
+            if config.name == 'Staging'
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = ['$(inherited)', 'STAGING']
+                config.build_settings['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = ['$(inherited)', 'STAGING']
+            end
+            if config.name == 'Release'
+                config.build_settings['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = ['$(inherited)', 'RELEASE']
+            end
+        end
+    end
+end
